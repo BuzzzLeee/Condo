@@ -2,7 +2,6 @@ const { error } = require('console');
 const express = require('express')
 const app = express()
 const port = 2000
-
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
 // const path = require('path'); 
@@ -40,7 +39,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 //const client = new MongoClient(uri);
 
 let visitDetailCollection;
-//let securityCollection;
 let hostCollection;
 let adminCollection;
 
@@ -151,14 +149,14 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   }
 
   //Function User Register
-  async function register(reqUsername, reqPassword, reqName, reqEmail) {
+  async function register(reqUsername, reqPassword, reqName, reqEmail, reqAddress, reqPhone) {
    const client = new MongoClient(uri);
    try {
      await client.connect();
 
 
      // Validate the request payload
-     if (!reqUsername || !reqPassword || !reqName || !reqEmail) {
+     if (!reqUsername || !reqPassword || !reqName || !reqEmail || !reqAddress || !reqPhone) {
        throw new Error('Missing required fields');
      }
 
@@ -167,6 +165,8 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
        Password: reqPassword,
        name: reqName,
        email: reqEmail,
+       address: reqAddress,
+       phone: reqPhone,
      });
 
      return 'Registration Complete!!';

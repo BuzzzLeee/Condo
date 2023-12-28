@@ -161,6 +161,12 @@
  *                 type: string
  *                 format: email
  *                 description: "User's email address"
+ *               address:
+ *                  type: string
+ *                  description: "User's address"
+ *               phone:
+ *                  type: string
+ *                  description: "User's Phone No"
  *     responses:
  *       200:
  *         description: "User registered successfully"
@@ -198,6 +204,7 @@
  *     tags:
  *       - Admin
  *       - User
+ *       - Visitor
  *     summary: "Create a Visit"
  *     description: "Create a new visit record."
  *     requestBody:
@@ -512,3 +519,4 @@
  *                   type: string
  *                   description: "Error message"
  */
+
