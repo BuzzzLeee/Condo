@@ -25,10 +25,10 @@
  *             properties:
  *               Username:
  *                 type: string
- *                 description: "User's username"
+ *                 description: "User's Username"
  *               Password:
  *                 type: string
- *                 description: "User's password"
+ *                 description: "User's Password"
  *     responses:
  *       200:
  *         description: "User authenticated successfully"
@@ -154,10 +154,10 @@
  *               Password:
  *                 type: string
  *                 description: "User's password"
- *               Name:
+ *               name:
  *                 type: string
  *                 description: "User's name"
- *               Email:
+ *               email:
  *                 type: string
  *                 format: email
  *                 description: "User's email address"

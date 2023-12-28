@@ -26,7 +26,7 @@ const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'MyVMS API',
+      title: 'CondoVisitorManagement API',
       version: '1.0.0',
     },
   },
@@ -237,14 +237,7 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
       });
   });
 
-  // //Logout
-  // app.post('/logout', (req, res) => {
-  //   // Perform any logout-related tasks here
-  //   res.send('Logout successful');
-  // });
-
   //Create Visit
-  
   app.post('/create-visit', async (req, res) => {
     try {
       const {visitorName, gender, citizenship, visitorAddress, phoneNo, vehicleNo, hostId, visitDate,place , purpose } = req.body;
