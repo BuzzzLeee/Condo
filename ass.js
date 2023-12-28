@@ -2,15 +2,16 @@ const { error } = require('console');
 const express = require('express')
 const app = express()
 const port = 2000
-//const port = process.env.PORT || 2000;
+
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
 // const path = require('path'); 
+//const port = process.env.PORT || 2000;
 
-
+// app.use(cors());
 //express.json
 app.use(express.json())
-// app.use(cors());
+
 
 // MongoDB setup
 const { MongoClient } = require('mongodb');
@@ -236,6 +237,8 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
       res.status(400).send(error.message);
       });
   });
+
+
 
   //Create Visit
   app.post('/create-visit', async (req, res) => {
