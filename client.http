@@ -46,8 +46,33 @@ Content-Type: application/json
 Authorization: Bearer 
 
 {
-    "Username": "apo",
-    "Password": "apa"
+    "Username": "acai",
+    "Password": "12345"
+}
+
+#######################################
+######     Security Register     ######    
+#######################################
+POST http://localhost:2000/register-Security
+Content-Type: application/json
+Authorization: Bearer
+
+{
+    "Username": "haha",
+    "Password": "12345",
+    "name": "abu",
+}
+
+####################################
+######     Security Login     ######    
+####################################
+POST  http://localhost:2000/login-Security
+Content-Type: application/json
+Authorization: Bearer 
+
+{
+    "Username": "acai",
+    "Password": "12345"
 }
 
 ##################################
@@ -68,6 +93,7 @@ Content-Type: application/json
     "place" : "cafeteria",
     "purpose":"jual ayam"
 }
+
 
 ##################################
 ######     Delete Visit     ######    
@@ -139,25 +165,25 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2ODc1NTMzO
 
 
 
-#####################################
-POST http://localhost:2000/register-security
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MDM0ODU0NjIsImV4cCI6MTcwMzQ4OTA2Mn0.AsZqI2exQRNq1VFRDFhdUGfeqpHHTu_W5I2evIbKeXY
-{
+# #####################################
+# POST http://localhost:2000/register-security
+# Content-Type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MDM0ODU0NjIsImV4cCI6MTcwMzQ4OTA2Mn0.AsZqI2exQRNq1VFRDFhdUGfeqpHHTu_W5I2evIbKeXY
+# {
     
-    "name": "John Doe",
-    "id": "SG001",
-    "workshift": "Day",
-    "duration": "08:00",
-    "date": "23:06:23"
+#     "name": "John Doe",
+#     "id": "SG001",
+#     "workshift": "Day",
+#     "duration": "08:00",
+#     "date": "23:06:23"
   
-}
+# }
 
-####################
-POST  http://localhost:2000/login-security
-Content-Type: application/json
+# ####################
+# POST  http://localhost:2000/login-security
+# Content-Type: application/json
 
-{
-    "id": "SG001",
-    "name": "John Doe"
-}
+# {
+#     "id": "SG001",
+#     "name": "John Doe"
+# }

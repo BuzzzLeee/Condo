@@ -36,6 +36,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 let visitDetailCollection;
 let hostCollection;
 let adminCollection;
+let securityCollection;
 
 
 MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -45,6 +46,7 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   adminCollection = db.collection('adminCollection');
   visitDetailCollection = db.collection('visitDetailCollectionName');
   hostCollection = db.collection('hostCollectionName');
+  securityCollection = db.collection('securityCollectionName');
   
   
   // Start the server or perform other operations
@@ -347,7 +349,7 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   });
   
   // Read visit details (only admin)  
-  app.get('/visit-details',verifyToken, (req, res) => {
+  app.get('/visit-details',verifyToken,verifySecurityToken, (req, res) => {
     visitDetailCollection
       .find({})
       .toArray()
@@ -387,6 +389,132 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
       });
   });
   
+
+  /////////////////////////////
+  ///// Security Part /////////
+  /////////////////////////////
+
+  //Function Security Login
+  async function Securitylogin(reqSecurityUsername, reqSecurityPassword) {
+    const client = new MongoClient(uri);
+    try {
+      await client.connect();
+ 
+      // Validate the request payload
+      if (!reqSecurityUsername || !reqSecurityPassword) {
+        throw new Error('Missing required fields');
+      }
+      let matchuser = await securityCollection.findOne({ Username: reqSecurityUsername });
+ 
+      if (!matchuser) {
+        throw new Error('User not found!');
+      }
+ 
+      const passwordMatch = await bcrypt.compare(reqSecurityPassword, matchuser.Password);
+ 
+      if (passwordMatch) {
+        const token = generateSecurityToken(matchuser);
+        return {
+         user: matchuser,
+         token: token,
+        };
+      } else {
+        throw new Error('Invalid password');
+      }
+    } catch (error) {
+      console.error('Login Error:', error);
+      throw new Error('An error occurred during login.');
+    } finally {
+      await client.close();
+    }
+   }
+
+   //Function Security Register
+  async function registerSecurity(reqSecurityUsername, reqSecurityPassword, reqSecurityName) {
+    const client = new MongoClient(uri);
+    try {
+      await client.connect();
+ 
+ 
+      // Validate the request payload
+      if (!reqSecurityUsername || !reqSecurityPassword || !reqSecurityName) {
+        throw new Error('Missing required fields');
+      }
+      
+      const hashedPassword = await bcrypt.hash(reqSecurityPassword, 10);
+
+      await securityCollection.insertOne({
+        Username: reqSecurityUsername,
+        Password: hashedPassword,
+        name: reqSecurityName,
+      });
+ 
+      return 'Security Registration Complete!!';
+      } catch (error) {
+      console.error('Registration Error:', error);
+      throw new Error('An error occurred during registration.');
+     } finally {
+      await client.close();
+    }
+  }
+
+  //Function Generate Security Token
+  function generateSecurityToken(user) {
+    const payload = 
+    {
+      username: user.SecurityUsername,
+    };
+    const token = jwt.sign
+    (
+      payload, 'inipassword', 
+      { expiresIn: '1h' }
+    );
+    return token;
+  }
+  
+  //Function Verify
+  function verifySecurityToken(req, res, next) {
+    let header = req.headers.authorization;
+    console.log(header);
+    
+    let token = header.split(' ')[1];
+    
+    jwt.verify(token, 'inipassword', function (err, decoded) {
+      if (err) {
+        return res.status(401).send('Invalid Token');
+      }
+    
+      req.user = decoded;
+       next();
+    });
+  }
+
+  //Register Security
+  app.post('/register-security', (req, res) => {
+    console.log(req.body);
+  
+    registerSecurity(req.body.Username, req.body.Password, req.body.name)
+      .then((result) => {
+        res.send(result);
+      })
+      .catch((error) => {
+        res.status(400).send(error.message);
+      });
+  });  
+
+  //Login Security
+  app.post('/login-Security', (req, res) => {
+    console.log(req.body);
+  
+    Securitylogin(req.body.Username, req.body.Password)
+      .then((result) => {
+        let token = generateSecurityToken(result);
+        res.send(token);
+      })
+      .catch((error) => {
+        res.status(400).send(error.message);
+      });
+  });      
 
   app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

@@ -387,6 +387,7 @@
  *   get:
  *     tags:
  *       - Admin
+ *       - Security
  *     summary: "Get Visit Details"
  *     description: "Retrieve a list of visit details. Only accessible to admins."
  *     security:
@@ -472,6 +473,126 @@
  *     responses:
  *       200:
  *         description: "Admin authenticated successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                   description: "JWT token for authentication"
+ *       400:
+ *         description: "Bad Request - Missing required fields"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: "Error message"
+ *       401:
+ *         description: "Unauthorized - Invalid username or password"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: "Error message"
+ *       500:
+ *         description: "Internal Server Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: "Error message"
+ */
+
+/**
+ * @swagger
+ * /register-security:
+ *   post:
+ *     tags:
+ *       - Security
+ *     summary: "Security Registration"
+ *     description: "Register a new security user."
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Username:
+ *                 type: string
+ *                 description: "Security's username"
+ *               Password:
+ *                 type: string
+ *                 description: "Security's password"
+ *               name:
+ *                 type: string
+ *                 description: "Security's name"
+ *     responses:
+ *       200:
+ *         description: "Security registered successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               description: "Success message"
+ *       400:
+ *         description: "Bad Request - Missing required fields"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: "Error message"
+ *       500:
+ *         description: "Internal Server Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: "Error message"
+ */
+
+/**
+ * @swagger
+ * /login-Security:
+ *   post:
+ *     tags:
+ *       - Security
+ *     summary: "Security Login"
+ *     description: "Authenticate an admin user and generate a JWT token."
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Username:
+ *                 type: string
+ *                 description: "Security's username"
+ *               Password:
+ *                 type: string
+ *                 description: "Security's password"
+ *     responses:
+ *       200:
+ *         description: "Security authenticated successfully"
  *         content:
  *           application/json:
  *             schema:
