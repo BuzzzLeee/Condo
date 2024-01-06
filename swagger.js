@@ -196,9 +196,7 @@
  * /create-visit:
  *   post:
  *     tags:
- *       - Admin
  *       - User
- *       - Visitor
  *     summary: "Create a Visit"
  *     description: "Create a new visit record."
  *     requestBody:
