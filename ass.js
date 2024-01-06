@@ -361,6 +361,49 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
         res.status(500).send('An error occurred while retrieving visit details');
       });
   });
+
+    // Read visit details (only admin)  
+  app.get('/visit-details',verifyToken,verifySecurityToken, (req, res) => {
+    visitDetailCollection
+      .find({})
+      .toArray()
+      .then((visitDetails) => {
+        res.json(visitDetails);
+      })
+      .catch((error) => {
+        console.error('Error retrieving visit details:', error);
+        res.status(500).send('An error occurred while retrieving visit details');
+      });
+  });
+
+
+// Read specific visit detail (security and admin)
+app.get('/get-visitor-details/:visitDetailId', verifyToken, verifySecurityToken, (req, res) => {
+  const visitDetailId = req.params.visitDetailId;
+
+  // Validate visitDetailId
+  if (!visitDetailId) {
+    res.status(400).send('Missing visitDetailId');
+    return;
+  }
+
+  // Check if the visitDetailId exists in the database
+  visitDetailCollection
+    .findOne({ _id: new ObjectId(visitDetailId) })
+    .then((visitDetail) => {
+      if (!visitDetail) {
+        res.status(404).send('Visit detail not found');
+        return;
+      }
+
+      res.json(visitDetail);
+    })
+    .catch((error) => {
+      console.error('Error retrieving visit detail:', error);
+      res.status(500).send('An error occurred while retrieving visit detail');
+    });
+});
+
   
   //Register Admin
   app.post('/register-admin', (req, res) => {
@@ -514,7 +557,104 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
       .catch((error) => {
         res.status(400).send(error.message);
       });
-  });      
+  });
+
+  // Read user details (only security)
+app.get('/get-user-details/:userId', verifyToken, verifySecurityToken, (req, res) => {
+  const userId = req.params.userId;
+
+  // Validate userId
+  if (!userId) {
+    res.status(400).send('Missing userId');
+    return;
+  }
+
+  // Check if the userId exists in the database
+  hostCollection
+    .findOne({ _id: new ObjectId(userId) })
+    .then((user) => {
+      if (!user) {
+        res.status(404).send('User not found');
+        return;
+      }
+
+      // Exclude sensitive information (e.g., password) before sending the response
+      const userWithoutSensitiveInfo = {
+        _id: user._id,
+        Username: user.Username,
+        name: user.name,
+        email: user.email,
+        // Add other fields as needed
+      };
+
+      res.json(userWithoutSensitiveInfo);
+    })
+    .catch((error) => {
+      console.error('Error retrieving user details:', error);
+      res.status(500).send('An error occurred while retrieving user details');
+    });
+});
+
+// Visitor Get pass 
+app.route('/get-visitor-pass/:hostId')
+  .post((req, res) => {
+    const hostId = req.params.hostId;
+
+    // Validate hostId
+    if (!hostId) {
+      res.status(400).send('Missing hostId');
+      return;
+    }
+
+    // Check if the hostId exists in the database
+    hostCollection.findOne({ _id: new ObjectId(hostId) })
+      .then((host) => {
+        if (!host) {
+          res.status(404).send('Host not found');
+          return;
+        }
+
+        // Generate a visitor pass
+        const visitorPass = generateVisitorPass();
+
+        // Store the visitor pass in the database if needed
+        hostCollection.updateOne({ _id: new ObjectId(hostId) }, { $set: { visitorPass: visitorPass } });
+
+        res.json({ visitorPass });
+      })
+      .catch((error) => {
+        console.error('Error getting visitor pass:', error);
+        res.status(500).send('An error occurred while getting the visitor pass');
+      });
+  })
+  .get((req, res) => {
+    const hostId = req.params.hostId;
+
+    // Validate hostId
+    if (!hostId) {
+      res.status(400).send('Missing hostId');
+      return;
+    }
+
+    // Check if the hostId exists in the database
+    hostCollection.findOne({ _id: new ObjectId(hostId) })
+      .then((host) => {
+        if (!host) {
+          res.status(404).send('Host not found');
+          return;
+        }
+
+        // Retrieve the visitor pass from the database
+        const visitorPass = host.visitorPass;
+
+        res.json({ visitorPass });
+      })
+      .catch((error) => {
+        console.error('Error getting visitor pass:', error);
+        res.status(500).send('An error occurred while getting the visitor pass');
+      });
+  });
+
 
   app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

@@ -60,7 +60,7 @@ Authorization: Bearer
 {
     "Username": "haha",
     "Password": "12345",
-    "name": "abu",
+    "name": "abu"
 }
 
 ####################################
@@ -71,7 +71,7 @@ Content-Type: application/json
 Authorization: Bearer 
 
 {
-    "Username": "acai",
+    "Username": "haha",
     "Password": "12345"
 }
 
@@ -93,6 +93,12 @@ Content-Type: application/json
     "place" : "cafeteria",
     "purpose":"jual ayam"
 }
+
+################################
+######     Visit Pass     ######    
+################################
+POST  http://localhost:2000/get-visitor-pass/65992f3c167c8a323f6c4d1c
+Content-Type: application/json
 
 
 ##################################
