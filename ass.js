@@ -4,29 +4,24 @@ const app = express()
 const port = 2000
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
-// const path = require('path'); 
-//const port = process.env.PORT || 2000;
+const bcrypt = require('bcrypt');
 
-// app.use(cors());
+
 //express.json
 app.use(express.json())
-
 
 // MongoDB setup
 const { MongoClient } = require('mongodb');
 const uri = 'mongodb+srv://Bazli:Bazli35@cluster0.maezorf.mongodb.net/CondoVisitorManagement';
-//const uri = 'mongodb+srv://bazli:buzz12345@cluster0.dziqul4.mongodb.net/true&authSource=admin';
 
 const swaggerUi = require('swagger-ui-express');
-// const swaggerDocument = require('./swagger.js');
-// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const swaggerJsdoc = require('swagger-jsdoc');
 const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'CondoVisitorManagement API',
+      title: 'Condo Visitor Management API',
       version: '1.0.0',
     },
   },
@@ -49,7 +44,6 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   const db = client.db('CondoVisitorManagement');
   adminCollection = db.collection('adminCollection');
   visitDetailCollection = db.collection('visitDetailCollectionName');
-  //securityCollection = db.collection('securityCollectionName');
   hostCollection = db.collection('hostCollectionName');
   
   
@@ -73,7 +67,10 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
       if (!matchuser) {
         throw new Error('User not found!');
       }
-      if (matchuser.Password === reqPassword) {
+
+      const passwordMatch = await bcrypt.compare(reqPassword, matchuser.Password);
+
+      if (passwordMatch) {
         return {
           user: matchuser,
         };
@@ -103,7 +100,10 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
      if (!matchuser) {
        throw new Error('User not found!');
      }
-     if (matchuser.Password === reqAdminPassword) {
+
+     const passwordMatch = await bcrypt.compare(reqAdminPassword, matchuser.Password);
+
+     if (passwordMatch) {
        const token = generateToken(matchuser);
        return {
         user: matchuser,
@@ -131,10 +131,12 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
       if (!reqAdminUsername || !reqAdminPassword || !reqAdminName || !reqAdminEmail) {
         throw new Error('Missing required fields');
       }
- 
+      
+      const hashedPassword = await bcrypt.hash(reqAdminPassword, 10);
+
       await adminCollection.insertOne({
         Username: reqAdminUsername,
-        Password: reqAdminPassword,
+        Password: hashedPassword,
         name: reqAdminName,
         email: reqAdminEmail,
       });
@@ -149,34 +151,34 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   }
 
   //Function User Register
-  async function register(reqUsername, reqPassword, reqName, reqEmail, reqAddress, reqPhone) {
-   const client = new MongoClient(uri);
-   try {
-     await client.connect();
+  async function register(reqUsername, reqPassword, reqName, reqEmail) {
+    const client = new MongoClient(uri);
+    try {
+      await client.connect();
+ 
+ 
+      // Validate the request payload
+      if (!reqUsername || !reqPassword || !reqName || !reqEmail ) {
+        throw new Error('Missing required fields');
+      }
 
-
-     // Validate the request payload
-     if (!reqUsername || !reqPassword || !reqName || !reqEmail || !reqAddress || !reqPhone) {
-       throw new Error('Missing required fields');
-     }
-
-     await hostCollection.insertOne({
-       Username: reqUsername,
-       Password: reqPassword,
-       name: reqName,
-       email: reqEmail,
-       address: reqAddress,
-       phone: reqPhone,
-     });
-
-     return 'Registration Complete!!';
-     } catch (error) {
-     console.error('Registration Error:', error);
-     throw new Error('An error occurred during registration.');
-    } finally {
-     await client.close();
+      const hashedPassword = await bcrypt.hash(reqPassword, 10);
+ 
+      await hostCollection.insertOne({
+        Username: reqUsername,
+        Password: hashedPassword,
+        name: reqName,
+        email: reqEmail,
+      });
+ 
+      return 'Registration Complete!!';
+      } catch (error) {
+      console.error('Registration Error:', error);
+      throw new Error('An error occurred during registration.');
+     } finally {
+      await client.close();
+    }
    }
-  }
 
   //Function Generate Token
   function generateToken(user) {
@@ -237,10 +239,7 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
       res.status(400).send(error.message);
       });
   });
-
-
-
-  //Create Visit
+  
   app.post('/create-visit', async (req, res) => {
     try {
       const {visitorName, gender, citizenship, visitorAddress, phoneNo, vehicleNo, hostId, visitDate,place , purpose } = req.body;
@@ -345,26 +344,6 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
         res.status(500).send('An error occurred while retrieving visit details');
       });
   });
-
-  // //Register Security
-  // app.post('/register-security', (req, res) => {
-  //   const { name, id, workshift, duration, date } = req.body;
-  
-  //   // Validate the request payload
-  //   if (!name || !id || !workshift || !duration || !date) {
-  //     res.status(400).send('Missing required fields');
-  //     return;
-  //   }  
-  //   securityCollection
-  //     .insertOne({ name, id, workshift, duration, date })
-  //     .then(() => {
-  //       res.send('Security guard registered successfully');
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error registering security guard:', error);
-  //       res.status(500).send('An error occurred while registering the security guard');
-  //     });
-  // });
   
   //Register Admin
   app.post('/register-admin', (req, res) => {
@@ -393,37 +372,6 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
       });
   });
   
-  // //Login Security
-  // app.post('/login-security', (req, res) => {
-  //   console.log(req.body);
-  
-  //   const { id, name } = req.body;
-  
-  //   // Validate the request payload
-  //   if (!id || !name) {
-  //     res.status(400).send('Missing required fields');
-  //     return;
-  //   }
-  
-  //   securityCollection
-  //     .findOne({ id, name })
-  //     .then((guard) => {
-  //       if (!guard) {
-  //         res.status(401).send('Invalid credentials');
-  //         return;
-  //       }
-  
-  //       // Generate a token for authentication
-  //       const token = generateToken(guard);
-  
-  //       res.send(token);
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error during security guard login:', error);
-  //       res.status(500).send('An error occurred during login');
-  //     });
-  // });
-
 
   app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

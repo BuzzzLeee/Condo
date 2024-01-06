@@ -161,12 +161,6 @@
  *                 type: string
  *                 format: email
  *                 description: "User's email address"
- *               address:
- *                  type: string
- *                  description: "User's address"
- *               phone:
- *                  type: string
- *                  description: "User's Phone No"
  *     responses:
  *       200:
  *         description: "User registered successfully"

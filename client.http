@@ -1,7 +1,7 @@
 ################################
 ######     User Login     ######    
 ################################
-POST  http://localhost:2000/login
+POST  http://localhost:2000/Userlogin
 Content-Type: application/json
 Authorization: Bearer 
 
@@ -21,20 +21,18 @@ Authorization: Bearer
     "Username": "abu",
     "Password": "123",
     "name":"aahh",
-    "email":"aahh@gmail.com",
-    "address": "0111111111",
-    "phone": "999"
+    "email":"aahh@gmail.com"
 }
 
 ####################################
 ######     Admin Register     ######    
 ####################################
-POST http://localhost:2000/register-admin
+POST http://localhost:2000/register-Admin
 Content-Type: application/json
 Authorization: Bearer
 
 {
-    "Username": "aaa",
+    "Username": "acai",
     "Password": "12345",
     "name": "abu",
     "email": "abu@example.com"
@@ -43,7 +41,7 @@ Authorization: Bearer
 #################################
 ######     Admin Login     ######    
 #################################
-POST  http://localhost:2000/login-admin
+POST  http://localhost:2000/login-Admin
 Content-Type: application/json
 Authorization: Bearer 
 
