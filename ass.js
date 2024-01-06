@@ -349,7 +349,7 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   });
   
   // Read visit details (only admin)  
-  app.get('/visit-details',verifyToken,verifySecurityToken, (req, res) => {
+  app.get('/visit-details', verifyToken, verifySecurityToken, (req, res) => {
     visitDetailCollection
       .find({})
       .toArray()
@@ -362,47 +362,32 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
       });
   });
 
-    // Read visit details (only admin)  
-  app.get('/visit-details',verifyToken,verifySecurityToken, (req, res) => {
+  // Read specific visit detail (security and admin)
+  app.get('/get-visitor-details/:visitDetailId', verifyToken, verifySecurityToken, (req, res) => {
+    const visitDetailId = req.params.visitDetailId;
+
+    // Validate visitDetailId
+    if (!visitDetailId) {
+      res.status(400).send('Missing visitDetailId');
+      return;
+    }
+
+    // Check if the visitDetailId exists in the database
     visitDetailCollection
-      .find({})
-      .toArray()
-      .then((visitDetails) => {
-        res.json(visitDetails);
+      .findOne({ _id: new ObjectId(visitDetailId) })
+      .then((visitDetail) => {
+        if (!visitDetail) {
+          res.status(404).send('Visit detail not found');
+          return;
+        }
+
+        res.json(visitDetail);
       })
       .catch((error) => {
-        console.error('Error retrieving visit details:', error);
-        res.status(500).send('An error occurred while retrieving visit details');
+        console.error('Error retrieving visit detail:', error);
+        res.status(500).send('An error occurred while retrieving visit detail');
       });
   });
-
-
-// Read specific visit detail (security and admin)
-app.get('/get-visitor-details/:visitDetailId', verifyToken, verifySecurityToken, (req, res) => {
-  const visitDetailId = req.params.visitDetailId;
-
-  // Validate visitDetailId
-  if (!visitDetailId) {
-    res.status(400).send('Missing visitDetailId');
-    return;
-  }
-
-  // Check if the visitDetailId exists in the database
-  visitDetailCollection
-    .findOne({ _id: new ObjectId(visitDetailId) })
-    .then((visitDetail) => {
-      if (!visitDetail) {
-        res.status(404).send('Visit detail not found');
-        return;
-      }
-
-      res.json(visitDetail);
-    })
-    .catch((error) => {
-      console.error('Error retrieving visit detail:', error);
-      res.status(500).send('An error occurred while retrieving visit detail');
-    });
-});
 
   
   //Register Admin
@@ -472,7 +457,8 @@ app.get('/get-visitor-details/:visitDetailId', verifyToken, verifySecurityToken,
     }
    }
 
-   //Function Security Register
+
+  //Function Security Register
   async function registerSecurity(reqSecurityUsername, reqSecurityPassword, reqSecurityName) {
     const client = new MongoClient(uri);
     try {
@@ -560,7 +546,7 @@ app.get('/get-visitor-details/:visitDetailId', verifyToken, verifySecurityToken,
   });
 
   // Read user details (only security)
-app.get('/get-user-details/:userId', verifyToken, verifySecurityToken, (req, res) => {
+  app.get('/get-user-details/:userId', verifyToken, verifySecurityToken, (req, res) => {
   const userId = req.params.userId;
 
   // Validate userId

@@ -7,14 +7,14 @@
  *       scheme: bearer
  *       bearerFormat: JWT
  *     AdminAuth:
- *       type: apiKey
+ *       type: http
  *       scheme: bearer
  *       in: header
  *       name: Authorization
  *       description: Admin authentication token
  *       bearerFormat: JWT
  *     SecurityAuth:
- *       type: apiKey
+ *       type: http
  *       scheme: bearer
  *       in: header
  *       name: Authorization

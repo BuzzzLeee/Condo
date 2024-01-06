@@ -46,8 +46,8 @@ Content-Type: application/json
 Authorization: Bearer 
 
 {
-    "Username": "acai",
-    "Password": "12345"
+    "Username": "haha",
+    "Password": "hehe"
 }
 
 #######################################
@@ -97,16 +97,16 @@ Content-Type: application/json
 ################################
 ######     Visit Pass     ######    
 ################################
-POST  http://localhost:2000/get-visitor-pass/65992f3c167c8a323f6c4d1c
+POST  http://localhost:2000/get-visitor-pass/6599149e5e717ed368d66bc1
 Content-Type: application/json
 
 
 ##################################
 ######     Delete Visit     ######    
 ##################################
-DELETE http://localhost:2000/delete-visit/658944b721210e13fffe9c66
+DELETE http://localhost:2000/delete-visit/65992f3c167c8a323f6c4d1c
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MDM0OTQ5ODYsImV4cCI6MTcwMzQ5ODU4Nn0.8NqC3-jVNxG_R9ZDVg5RbjStbpYRXJO1xfg3YT1Ggjs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MDQ1NDI2ODIsImV4cCI6MTcwNDU0NjI4Mn0.6o-uwqHYYcUKv3I_XV5NDg5L3nOkzwTwrgceK1AxApQ
 
 
 
@@ -115,8 +115,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MDM0OTQ5O
 #######################################
 GET http://localhost:2000/visit-details
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MDM2NjQ5MDksImV4cCI6MTcwMzY2ODUwOX0.rj2y_xMkb8PI9Tr2r5iKBnTtzd_T5Wo3QCh-gdqsQ20
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MDQ1NDM2ODMsImV4cCI6MTcwNDU0NzI4M30.XyTSftzStysD7ip6P8XYaEbjAjDANVQMsbpItJml764
 
+#######################################
+######     Get User Details      ######    
+#######################################
+GET http://localhost:2000/user-details
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MDQ1NDI2ODIsImV4cCI6MTcwNDU0NjI4Mn0.6o-uwqHYYcUKv3I_XV5NDg5L3nOkzwTwrgceK1AxApQ
 
 
 ##################################
