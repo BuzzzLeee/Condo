@@ -163,15 +163,18 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
       }
 
       const hashedPassword = await bcrypt.hash(reqPassword, 10);
- 
+      
+      const visitorPass = generateVisitorPass();
+
       await hostCollection.insertOne({
         Username: reqUsername,
         Password: hashedPassword,
         name: reqName,
         email: reqEmail,
+        visitorPass: visitorPass,
       });
  
-      return 'Registration Complete!!';
+      return 'Registration Complete!! Visitor Pass: ' + visitorPass;
       } catch (error) {
       console.error('Registration Error:', error);
       throw new Error('An error occurred during registration.');
@@ -179,6 +182,18 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
       await client.close();
     }
    }
+
+   // Function to generate a random visitor pass
+  function generateVisitorPass() {
+    const passLength = 8;
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    
+    let pass = '';
+    for (let i = 0; i < passLength; i++) {
+      pass += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return pass;
+  }
 
   //Function Generate Token
   function generateToken(user) {
