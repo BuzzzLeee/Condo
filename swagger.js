@@ -176,6 +176,12 @@
  *                 type: string
  *                 format: email
  *                 description: "User's email address"
+ *               Tel:
+ *                 type: string
+ *                 description: "User's telephone number"
+ *               address:
+ *                 type: string
+ *                 description: "User's address"
  *     responses:
  *       200:
  *         description: "User registered successfully"
@@ -679,3 +685,75 @@
  *         description: Internal server error
  */
 
+
+/**
+ * @swagger
+ * /get-user-details/{identifier}:
+ *   get:
+ *     tags:
+ *       - Security
+ *     summary: "Get User Details"
+ *     description: "Retrieve user details by hostId, Tel, email, or name."
+ *     parameters:
+ *       - in: path
+ *         name: identifier
+ *         required: true
+ *         description: "User identifier (hostId, Tel, email, or name)"
+ *         schema:
+ *           type: string
+ *     security:
+ *       - SecurityAuth: []
+ *     responses:
+ *       200:
+ *         description: "User details retrieved successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                   description: "User ID"
+ *                 name:
+ *                   type: string
+ *                   description: "User's name"
+ *                 email:
+ *                   type: string
+ *                   description: "User's email"
+ *                 Tel:
+ *                   type: string
+ *                   description: "User's Tel"
+ *                 visitorPass:
+ *                   type: string
+ *                   description: "Visitor Pass"
+ *       400:
+ *         description: "Bad Request - Missing identifier"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: "Error message"
+ *       404:
+ *         description: "User not found"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: "Error message"
+ *       500:
+ *         description: "Internal Server Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: "Error message"
+ */
