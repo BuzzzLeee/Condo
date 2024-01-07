@@ -659,30 +659,35 @@
 /**
  * @swagger
  * /get-visitor-pass/{hostId}:
- *   get:
+ *   post:
  *     tags:
  *       - Visitor
- *     summary: Retrieve the visitor pass for a host
+ *     summary: "Get passVisit "
+ *     description: "Generate and update a new visitor pass for a host."
  *     parameters:
  *       - in: path
  *         name: hostId
  *         required: true
- *         description: The ID of the host to retrieve the visitor pass for
+ *         description: "ID of the host"
  *         schema:
  *           type: string
  *     responses:
  *       200:
- *         description: Successful response with the retrieved visitor pass
+ *         description: "New visitor pass generated successfully"
  *         content:
  *           application/json:
- *             example:
- *               visitorPass: ABC123
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 visitorPass:
+ *                   type: string
+ *                   description: "Generated visitor pass"
  *       400:
- *         description: Bad request, missing hostId
+ *         description: "Bad Request - Missing hostId"
  *       404:
- *         description: Host not found
+ *         description: "Host not found"
  *       500:
- *         description: Internal server error
+ *         description: "Internal Server Error"
  */
 
 
