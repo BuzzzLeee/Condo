@@ -11,7 +11,7 @@ app.use(express.json())
 
 // MongoDB setup
 const { MongoClient } = require('mongodb');
-const uri = 'mongodb+srv://Bazli:Bazli35@cluster0.maezorf.mongodb.net/CondoVisitorManagement';
+const uri = 'mongodb+srv://bazli:MCAkCsGiuQgmgUZN@cluster0.dziqul4.mongodb.net/?retryWrites=true&w=majority';
 
 const swaggerUi = require('swagger-ui-express');
 
