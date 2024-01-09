@@ -6,7 +6,6 @@ const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 
-
 //express.json
 app.use(express.json())
 
@@ -47,8 +46,7 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   visitDetailCollection = db.collection('visitDetailCollectionName');
   hostCollection = db.collection('hostCollectionName');
   securityCollection = db.collection('securityCollectionName');
-  
-  
+
   // Start the server or perform other operations
 
   const { ObjectId } = require('mongodb');
@@ -196,7 +194,7 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
     for (let i = 0; i < passLength; i++) {
       pass += characters.charAt(Math.floor(Math.random() * characters.length));
     }
-    return pass;
+    return uuidv4();
   }
 
   //Function Generate Token
@@ -599,7 +597,7 @@ app.get('/get-user-details/:identifier', verifyToken, verifySecurityToken, (req,
     });
 });
 
-// Visitor Get pass 
+// Visitor Get pass
 app.route('/get-visitor-pass/:hostId')
   .post((req, res) => {
     const hostId = req.params.hostId;
@@ -618,10 +616,10 @@ app.route('/get-visitor-pass/:hostId')
           return;
         }
 
-        // Generate a visitor pass
+        // Generate a new visitor pass
         const visitorPass = generateVisitorPass();
 
-        // Store the visitor pass in the database if needed
+        // Update the visitor pass in the database
         hostCollection.updateOne({ _id: new ObjectId(hostId) }, { $set: { visitorPass: visitorPass } });
 
         res.json({ visitorPass });
@@ -659,7 +657,6 @@ app.route('/get-visitor-pass/:hostId')
       });
   });
 
-
   app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
   });
@@ -667,7 +664,3 @@ app.route('/get-visitor-pass/:hostId')
   .catch(err => {
   console.error('Failed to connect to MongoDB:', err);
 });
-
-
-
-
