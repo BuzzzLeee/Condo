@@ -151,14 +151,14 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   }
 
   //Function User Register
-  async function register(reqUsername, reqPassword, reqName, reqEmail, reqTel, reqAddress) {
+  async function register(reqUsername, reqPassword, reqname, reqemail, reqtel, reqaddress) {
     const client = new MongoClient(uri);
     try {
       await client.connect();
  
  
       // Validate the request payload
-      if (!reqUsername || !reqPassword || !reqName || !reqEmail || !reqTel || !reqAddress ) {
+      if (!reqUsername || !reqPassword || !reqname || !reqemail || !reqtel || !reqaddress ) {
         throw new Error('Missing required fields');
       }
 
@@ -169,10 +169,10 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
       await hostCollection.insertOne({
         Username: reqUsername,
         Password: hashedPassword,
-        name: reqName,
-        Tel: reqTel,
-        email: reqEmail,
-        address: reqAddress,
+        name: reqname,
+        Tel: reqtel,
+        email: reqemail,
+        address: reqaddress,
         visitorPass: visitorPass,
       });
  
@@ -194,7 +194,7 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
     for (let i = 0; i < passLength; i++) {
       pass += characters.charAt(Math.floor(Math.random() * characters.length));
     }
-    return uuidv4();
+    return pass;
   }
 
   //Function Generate Token
