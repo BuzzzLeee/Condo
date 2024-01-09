@@ -59,4 +59,4 @@ jobs:
           app-name: 'latestCVM'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_58B8D952A8C9432E96DB82DADC53F504 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_450F1B6242E34E34B04E6862B6035068 }}
