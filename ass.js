@@ -132,6 +132,11 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
         throw new Error('Missing required fields');
       }
       
+      // Check password strength
+      if (!isStrongPassword(reqAdminPassword)) {
+        throw new Error('Password does not meet strength criteria');
+      }
+
       const hashedPassword = await bcrypt.hash(reqAdminPassword, 10);
 
       await adminCollection.insertOne({
@@ -162,8 +167,12 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
         throw new Error('Missing required fields');
       }
 
+      // Check password strength
+      if (!isStrongPassword(reqPassword)) {
+        throw new Error('Password does not meet strength criteria');
+      }
+
       const hashedPassword = await bcrypt.hash(reqPassword, 10);
-      
       const visitorPass = generateVisitorPass();
 
       await hostCollection.insertOne({
@@ -195,6 +204,23 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
       pass += characters.charAt(Math.floor(Math.random() * characters.length));
     }
     return pass;
+  }
+
+    // Function to check if a password is strong//
+  function isStrongPassword(password) {
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasDigits = /\d/.test(password);
+    const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    return (
+      password.length >= minLength &&
+      hasUpperCase &&
+      hasLowerCase &&
+      hasDigits &&
+      hasSpecialChars
+    );
   }
 
   //Function Generate Token
@@ -470,6 +496,10 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
         throw new Error('Missing required fields');
       }
       
+      // Check password strength
+      if (!isStrongPassword(reqSecurityPassword)) {
+        throw new Error('Password does not meet strength criteria');
+      }
       const hashedPassword = await bcrypt.hash(reqSecurityPassword, 10);
 
       await securityCollection.insertOne({

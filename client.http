@@ -22,7 +22,7 @@ Authorization: Bearer
     "Password": "123",
     "name":"aahh",
     "email":"aahh@gmail.com",
-    "Tel": 999
+    "Tel": "999"
 }
 
 ####################################
