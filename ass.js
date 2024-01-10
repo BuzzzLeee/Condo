@@ -11,7 +11,7 @@ app.use(express.json())
 
 // MongoDB setup
 const { MongoClient } = require('mongodb');
-const uri = 'mongodb+srv://bazli:MCAkCsGiuQgmgUZN@cluster0.dziqul4.mongodb.net/?retryWrites=true&w=majority';
+const uri = 'mongodb+srv://bazli:Nasigoreng35@cluster0.dziqul4.mongodb.net/';
 
 const swaggerUi = require('swagger-ui-express');
 
@@ -169,7 +169,12 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
 
       // Check password strength
       if (!isStrongPassword(reqPassword)) {
-        throw new Error('Password does not meet strength criteria');
+        throw new Error('Your password must meet the following criteria:\n' +
+          '- At least 8 characters\n' +            // Comment: Minimum length
+          '- At least one uppercase letter\n' +    // Comment: Require an uppercase letter
+          '- At least one lowercase letter\n' +    // Comment: Require a lowercase letter
+          '- At least one number\n' +              // Comment: Require a number
+          '- At least one symbol');                 // Comment: Require a symbol
       }
 
       const hashedPassword = await bcrypt.hash(reqPassword, 10);
