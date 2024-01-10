@@ -530,7 +530,7 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
     };
     const token = jwt.sign
     (
-      payload, 'inipassword', 
+      payload, 'itupassword', 
       { expiresIn: '1h' }
     );
     return token;
@@ -543,7 +543,7 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
     
     let token = header.split(' ')[1];
     
-    jwt.verify(token, 'inipassword', function (err, decoded) {
+    jwt.verify(token, 'itupassword', function (err, decoded) {
       if (err) {
         return res.status(401).send('Invalid Token');
       }
